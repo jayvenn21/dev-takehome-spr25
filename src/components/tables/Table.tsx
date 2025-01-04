@@ -26,7 +26,7 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
             <th className="px-4 py-2 border border-gray-200">Item Requested</th>
             <th className="px-4 py-2 border border-gray-200">Created</th>
             <th className="px-4 py-2 border border-gray-200">Updated</th>
-            <th className="px-4 py-2 border border-gray-200">Status</th> {/* New column */}
+            <th className="px-4 py-2 border border-gray-200">Status</th>
           </tr>
         </thead>
         <tbody>
