@@ -15,10 +15,25 @@ interface TableProps {
 }
 
 export default function ItemRequestsTable({ data, onStatusChange }: TableProps) {
-  const statusOptions = ["Pending", "Approved", "Rejected"];
+  const statusOptions = ["Pending", "Approved", "Rejected", "Completed"];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-200 text-yellow-700";
+      case "Approved":
+        return "bg-green-200 text-green-700";
+      case "Rejected":
+        return "bg-red-200 text-red-700";
+      case "Completed":
+        return "bg-blue-200 text-blue-700";
+      default:
+        return "";
+    }
+  };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto border rounded-lg">
       <table className="table-auto w-full border-collapse border border-gray-200 text-left">
         <thead>
           <tr className="bg-gray-100 text-gray-700">
@@ -41,7 +56,7 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
               <td className="px-4 py-2 border border-gray-200">{row.itemRequested}</td>
               <td className="px-4 py-2 border border-gray-200">{row.created}</td>
               <td className="px-4 py-2 border border-gray-200">{row.updated || "N/A"}</td>
-              <td className="px-4 py-2 border border-gray-200">
+              <td className={`px-4 py-2 border border-gray-200 ${getStatusColor(row.status)}`}>
                 <Dropdown
                   options={statusOptions}
                   value={row.status}

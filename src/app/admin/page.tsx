@@ -37,8 +37,18 @@ export default function ItemRequestsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold mb-6">Item Requests</h1>
+    <div className="max-w-6xl mx-auto mt-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Item Requests</h1>
+        <div>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Mark as Status
+          </button>
+          <button className="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-600">
+            Delete
+          </button>
+        </div>
+      </div>
       <ItemRequestsTable data={data} onStatusChange={handleStatusChange} />
     </div>
   );

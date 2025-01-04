@@ -1,32 +1,15 @@
 import React from "react";
 
-type DropdownVariant = "primary" | "inverted";
-
 interface DropdownProps {
-  variant?: DropdownVariant;
   options: string[];
   value: string;
   onChange: (value: string) => void;
 }
 
-export default function Dropdown({
-  variant = "primary",
-  options,
-  value,
-  onChange,
-}: DropdownProps) {
-  const baseStyles = "py-2 px-4 rounded-md transition w-full ";
-
-  const variantStyles: Record<DropdownVariant, string> = {
-    primary:
-      "bg-primary border border-primary text-white hover:bg-white hover:text-primary",
-    inverted:
-      "bg-primary-fill text-primary border border-white hover:bg-primary hover:text-white",
-  };
-
+export default function Dropdown({ options, value, onChange }: DropdownProps) {
   return (
     <select
-      className={`${baseStyles} ${variantStyles[variant]}`}
+      className="py-2 px-3 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
