@@ -32,6 +32,7 @@ export default function ItemRequestsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [markAsStatus, setMarkAsStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,6 +119,11 @@ export default function ItemRequestsPage() {
     setCurrentPage(newPage);
   };
 
+  const handleMarkAsChange = (value: string) => {
+    setMarkAsStatus(value);
+    console.log(`Marked as ${value}`);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -128,11 +134,14 @@ export default function ItemRequestsPage() {
         <h1 className="text-2xl font-bold">Item Requests</h1>
         <div className="flex items-center space-x-2">
           <span className="text-gray-700 whitespace-nowrap">Mark as:</span>
-          <Dropdown
-            options={statuses.map(status => status.label)}
-            value=""
-            onChange={(value) => console.log(`Marked as ${value}`)}
-          />
+          <div className="relative inline-block text-left w-32">
+            <Dropdown
+              options={statuses.map(status => status.label)}
+              value={markAsStatus}
+              onChange={handleMarkAsChange}
+              placeholder="Status"
+            />
+          </div>
           <button
             className="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
             onClick={() => console.log("Delete selected items")}
@@ -146,6 +155,7 @@ export default function ItemRequestsPage() {
       
       {error && <div className="text-red-500">{error}</div>}
   
+      {/* Status Tabs */}
       <div className="mb-4 flex gap-4">
         <button
           className={`px-4 py-2 rounded-lg text-sm ${
@@ -184,4 +194,4 @@ export default function ItemRequestsPage() {
       </div>
     </div>
   );
-}
+}  
