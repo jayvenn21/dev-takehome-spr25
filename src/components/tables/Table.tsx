@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropdown from "@/components/atoms/Dropdown";
 
 type TableRow = {
@@ -17,6 +17,7 @@ interface TableProps {
 
 export default function ItemRequestsTable({ data, onStatusChange }: TableProps) {
   const statusOptions = ["Pending", "Approved", "Rejected", "Completed"];
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -33,11 +34,32 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
     }
   };
 
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      setSelectedRows(data.map(row => row.id));
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+  const handleSelectRow = (id: number) => {
+    setSelectedRows(prev => 
+      prev.includes(id) ? prev.filter(rowId => rowId !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div className="overflow-x-auto border rounded-lg">
       <table className="table-auto w-full border-collapse border border-gray-200 text-left">
         <thead>
           <tr className="bg-gray-100 text-gray-700">
+            <th className="px-4 py-2 border border-gray-200">
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={selectedRows.length === data.length}
+              />
+            </th>
             <th className="px-4 py-2 border border-gray-200">Name</th>
             <th className="px-4 py-2 border border-gray-200">Item Requested</th>
             <th className="px-4 py-2 border border-gray-200">Created</th>
@@ -48,11 +70,18 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
         <tbody>
           {data.map((row, index) => (
             <tr
-              key={row.name}
+              key={row.id}
               className={`${
                 index % 2 === 0 ? "bg-white" : "bg-gray-50"
               } text-gray-800`}
             >
+              <td className="px-4 py-2 border border-gray-200">
+                <input
+                  type="checkbox"
+                  checked={selectedRows.includes(row.id)}
+                  onChange={() => handleSelectRow(row.id)}
+                />
+              </td>
               <td className="px-4 py-2 border border-gray-200">{row.name}</td>
               <td className="px-4 py-2 border border-gray-200">{row.itemRequested}</td>
               <td className="px-4 py-2 border border-gray-200">{row.created}</td>
