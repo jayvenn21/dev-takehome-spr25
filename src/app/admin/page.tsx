@@ -12,13 +12,17 @@ type TableRow = {
   status: string;
 };
 
+const statuses = ["Pending", "Approved", "Rejected", "Completed"];
+
 export default function ItemRequestsPage() {
   const [data, setData] = useState<TableRow[]>([]);
+  const [filteredData, setFilteredData] = useState<TableRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,8 +50,8 @@ export default function ItemRequestsPage() {
         }));
 
         setData(formattedData);
-
-        setTotalRecords(result.length);
+        setTotalRecords(formattedData.length);
+        setFilteredData(formattedData);  // Set filtered data initially
 
       } catch (error: any) {
         setError(error.message || "An unknown error occurred.");
@@ -78,9 +82,24 @@ export default function ItemRequestsPage() {
 
       if (!response.ok) {
         console.error("Failed to update status:", await response.text());
+        setError("Cannot change status.");
       }
     } catch (error) {
       console.error("Error updating status:", error);
+      setError("Cannot change status.");
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleTabClick = (status: string) => {
+    setSelectedStatus(status);
+    if (status === "") {
+      setFilteredData(data); // Show all data if no status selected
+    } else {
+      setFilteredData(data.filter((item) => item.status === status));
     }
   };
 
@@ -93,15 +112,45 @@ export default function ItemRequestsPage() {
       <h1 className="text-2xl font-bold mb-4">Item Requests</h1>
       {error && <div className="text-red-500">{error}</div>}
 
-      <ItemRequestsTable data={data} onStatusChange={handleStatusChange} />
+      {/* Status Tabs */}
+      <div className="mb-4 flex gap-4">
+        {statuses.map((status) => (
+          <button
+            key={status}
+            className={`px-4 py-2 rounded-lg text-sm ${
+              selectedStatus === status
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            } hover:bg-blue-400 hover:text-white`}
+            onClick={() => handleTabClick(status)}
+          >
+            {status}
+          </button>
+        ))}
+        <button
+          className={`px-4 py-2 rounded-lg text-sm ${
+            selectedStatus === ""
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          } hover:bg-blue-400 hover:text-white`}
+          onClick={() => handleTabClick("")}
+        >
+          All
+        </button>
+      </div>
+
+      {/* Item Requests Table */}
+      <ItemRequestsTable data={filteredData} onStatusChange={handleStatusChange} />
 
       {/* Pagination component */}
-      <Pagination
-        pageNumber={currentPage}
-        pageSize={pageSize}
-        totalRecords={totalRecords}
-        onPageChange={(newPage: number) => setCurrentPage(newPage)}
-      />
+      <div className="mt-4">
+        <Pagination
+          pageNumber={currentPage}
+          pageSize={pageSize}
+          totalRecords={totalRecords}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 }
