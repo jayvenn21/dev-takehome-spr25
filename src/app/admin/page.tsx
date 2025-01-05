@@ -16,7 +16,13 @@ type TableRow = {
   status: string;
 };
 
-const statuses = ["Pending", "Approved", "Rejected", "Completed"];
+const statuses = [
+  { label: "Pending", color: "blue" },
+  { label: "Approved", color: "blue" },
+  { label: "Rejected", color: "blue" },
+  { label: "Completed", color: "blue" },
+];
+
 
 export default function ItemRequestsPage() {
   const [data, setData] = useState<TableRow[]>([]);
@@ -120,7 +126,7 @@ export default function ItemRequestsPage() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Item Requests</h1>
       {error && <div className="text-red-500">{error}</div>}
-
+  
       {/* Status Tabs */}
       <div className="mb-4 flex gap-4">
         <button
@@ -135,22 +141,22 @@ export default function ItemRequestsPage() {
         </button>
         {statuses.map((status) => (
           <button
-            key={status}
+            key={status.label}
             className={`px-4 py-2 rounded-lg text-sm ${
-              selectedStatus === status
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700"
-            } hover:bg-blue-400 hover:text-white`}
-            onClick={() => handleTabClick(status)}
+              selectedStatus === status.label
+                ? `bg-${status.color}-500 text-white`
+                : `bg-gray-200 text-gray-700`
+            } hover:bg-${status.color}-400 hover:text-white`}
+            onClick={() => handleTabClick(status.label)}
           >
-            {status}
+            {status.label}
           </button>
         ))}
       </div>
-
+  
       {/* Item Requests Table */}
       <ItemRequestsTable data={filteredData} onStatusChange={handleStatusChange} />
-
+  
       {/* Pagination component */}
       <div className="mt-4">
         <Pagination
