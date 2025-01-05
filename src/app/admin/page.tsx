@@ -5,6 +5,7 @@ import ItemRequestsTable from "@/components/tables/Table";
 import Pagination from "@/components/molecules/Pagination";
 
 type TableRow = {
+  id: number;
   name: string;
   itemRequested: string;
   created: string;
@@ -40,6 +41,7 @@ export default function ItemRequestsPage() {
         const result = await response.json();
 
         const formattedData = result.map((item: any) => ({
+          id: item.id,
           name: item.requestorName,
           itemRequested: item.itemRequested,
           created: new Date(item.requestCreatedDate).toLocaleDateString(),
@@ -51,7 +53,7 @@ export default function ItemRequestsPage() {
 
         setData(formattedData);
         setTotalRecords(formattedData.length);
-        setFilteredData(formattedData); // Set all data initially
+        setFilteredData(formattedData);
       } catch (error: any) {
         setError(error.message || "An unknown error occurred.");
       } finally {
@@ -62,33 +64,33 @@ export default function ItemRequestsPage() {
     fetchData();
   }, [currentPage]);
 
-  const handleStatusChange = async (index: number, value: string) => {
+  const handleStatusChange = async (id: number, value: string) => {
     const updatedData = [...data];
-    updatedData[index].status = value;
-    setData(updatedData);
-
-    try {
-      const response = await fetch("/api/mock/request", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: updatedData[index].name, // Assuming `name` is a unique identifier
-          status: value,
-        }),
-      });
-
-      if (response.ok) {
-        setError(null); // Clear error if status update is successful
-      } else {
-        const result = await response.json();
-        console.error("Failed to update status:", result);
-        setError("Failed to change status.");
+    const index = updatedData.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      updatedData[index].status = value;
+      setData(updatedData);
+  
+      try {
+        const response = await fetch("/api/mock/request", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: id,
+            status: value.toLowerCase(),
+          }),
+        });
+  
+        if (!response.ok) {
+          console.error("Failed to update status:", await response.text());
+          setError("Failed to change status.");
+        }
+      } catch (error) {
+        console.error("Error updating status:", error);
+        setError("Cannot change status.");
       }
-    } catch (error) {
-      console.error("Error updating status:", error);
-      setError("Cannot change status.");
     }
   };
 
@@ -97,9 +99,9 @@ export default function ItemRequestsPage() {
   };
 
   const handleTabClick = (status: string) => {
-    setSelectedStatus(status); // Update the selected status
+    setSelectedStatus(status);
     if (status === "") {
-      setFilteredData(data); // Show all data if "All" is selected
+      setFilteredData(data);
     } else {
       setFilteredData(data.filter((item) => item.status === status));
     }

@@ -2,6 +2,7 @@ import React from "react";
 import Dropdown from "@/components/atoms/Dropdown";
 
 type TableRow = {
+  id: number;
   name: string;
   itemRequested: string;
   created: string;
@@ -11,7 +12,7 @@ type TableRow = {
 
 interface TableProps {
   data: TableRow[];
-  onStatusChange: (index: number, value: string) => void;
+  onStatusChange: (id: number, value: string) => void;
 }
 
 export default function ItemRequestsTable({ data, onStatusChange }: TableProps) {
@@ -47,7 +48,7 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
         <tbody>
           {data.map((row, index) => (
             <tr
-              key={index}
+              key={row.name}
               className={`${
                 index % 2 === 0 ? "bg-white" : "bg-gray-50"
               } text-gray-800`}
@@ -60,7 +61,7 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
                 <Dropdown
                   options={statusOptions}
                   value={row.status}
-                  onChange={(value) => onStatusChange(index, value)}
+                  onChange={(value) => onStatusChange(row.id, value)}
                 />
               </td>
             </tr>
