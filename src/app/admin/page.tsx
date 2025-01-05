@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import ItemRequestsTable from "@/components/tables/Table";
 import Pagination from "@/components/molecules/Pagination";
+import { RequestStatus } from "@/lib/types/request";
+import mockItemRequests from "@/app/api/mock/data";
 
 type TableRow = {
   id: number;
@@ -40,7 +42,14 @@ export default function ItemRequestsPage() {
 
         const result = await response.json();
 
-        const formattedData = result.map((item: any) => ({
+        const statusMapping = {
+          [RequestStatus.APPROVED]: "Approved",
+          [RequestStatus.PENDING]: "Pending",
+          [RequestStatus.REJECTED]: "Rejected",
+          [RequestStatus.COMPLETED]: "Completed",
+        };
+        
+        const formattedData = mockItemRequests.map((item: any) => ({
           id: item.id,
           name: item.requestorName,
           itemRequested: item.itemRequested,
@@ -48,7 +57,7 @@ export default function ItemRequestsPage() {
           updated: item.lastEditedDate
             ? new Date(item.lastEditedDate).toLocaleDateString()
             : null,
-          status: item.status,
+          status: statusMapping[item.status as RequestStatus],
         }));
 
         setData(formattedData);
