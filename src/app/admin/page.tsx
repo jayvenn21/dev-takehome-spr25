@@ -22,7 +22,7 @@ export default function ItemRequestsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>(""); // Default to "All"
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,8 +51,7 @@ export default function ItemRequestsPage() {
 
         setData(formattedData);
         setTotalRecords(formattedData.length);
-        setFilteredData(formattedData);  // Set filtered data initially
-
+        setFilteredData(formattedData); // Set all data initially
       } catch (error: any) {
         setError(error.message || "An unknown error occurred.");
       } finally {
@@ -69,20 +68,23 @@ export default function ItemRequestsPage() {
     setData(updatedData);
 
     try {
-      const response = await fetch("/api/mock/requests", {
+      const response = await fetch("/api/mock/request", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: index + 1,
+          id: updatedData[index].name, // Assuming `name` is a unique identifier
           status: value,
         }),
       });
 
-      if (!response.ok) {
-        console.error("Failed to update status:", await response.text());
-        setError("Cannot change status.");
+      if (response.ok) {
+        setError(null); // Clear error if status update is successful
+      } else {
+        const result = await response.json();
+        console.error("Failed to update status:", result);
+        setError("Failed to change status.");
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -95,9 +97,9 @@ export default function ItemRequestsPage() {
   };
 
   const handleTabClick = (status: string) => {
-    setSelectedStatus(status);
+    setSelectedStatus(status); // Update the selected status
     if (status === "") {
-      setFilteredData(data); // Show all data if no status selected
+      setFilteredData(data); // Show all data if "All" is selected
     } else {
       setFilteredData(data.filter((item) => item.status === status));
     }
@@ -114,6 +116,16 @@ export default function ItemRequestsPage() {
 
       {/* Status Tabs */}
       <div className="mb-4 flex gap-4">
+        <button
+          className={`px-4 py-2 rounded-lg text-sm ${
+            selectedStatus === ""
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          } hover:bg-blue-400 hover:text-white`}
+          onClick={() => handleTabClick("")}
+        >
+          All
+        </button>
         {statuses.map((status) => (
           <button
             key={status}
@@ -127,16 +139,6 @@ export default function ItemRequestsPage() {
             {status}
           </button>
         ))}
-        <button
-          className={`px-4 py-2 rounded-lg text-sm ${
-            selectedStatus === ""
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-700"
-          } hover:bg-blue-400 hover:text-white`}
-          onClick={() => handleTabClick("")}
-        >
-          All
-        </button>
       </div>
 
       {/* Item Requests Table */}
