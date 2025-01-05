@@ -62,11 +62,6 @@ export default function ItemRequestsPage() {
 
         setData(formattedData);
         setTotalRecords(formattedData.length);
-        const paginatedData = formattedData.slice(
-          (currentPage - 1) * PAGINATION_PAGE_SIZE,
-          currentPage * PAGINATION_PAGE_SIZE
-        );
-        setFilteredData(paginatedData);
       } catch (error: any) {
         setError(error.message || "An unknown error occurred.");
       } finally {
@@ -76,6 +71,25 @@ export default function ItemRequestsPage() {
 
     fetchData();
   }, [currentPage]);
+
+  useEffect(() => {
+    if (selectedStatus === "") {
+      const paginatedData = data.slice(
+        (currentPage - 1) * PAGINATION_PAGE_SIZE,
+        currentPage * PAGINATION_PAGE_SIZE
+      );
+      setFilteredData(paginatedData);
+      setTotalRecords(data.length);
+    } else {
+      const filteredData = data.filter((item) => item.status === selectedStatus);
+      const paginatedData = filteredData.slice(
+        (currentPage - 1) * PAGINATION_PAGE_SIZE,
+        currentPage * PAGINATION_PAGE_SIZE
+      );
+      setFilteredData(paginatedData);
+      setTotalRecords(filteredData.length);
+    }
+  }, [selectedStatus, data, currentPage]);
 
   const handleStatusChange = async (id: number, value: string) => {
     const updatedData = [...data];
@@ -109,40 +123,13 @@ export default function ItemRequestsPage() {
 
   const handleTabClick = (status: string) => {
     setSelectedStatus(status);
-    if (status === "") {
-      const paginatedData = data.slice(
-        (currentPage - 1) * PAGINATION_PAGE_SIZE,
-        currentPage * PAGINATION_PAGE_SIZE
-      );
-      setFilteredData(paginatedData);
-      setTotalRecords(data.length);
-    } else {
-      const filteredData = data.filter((item) => item.status === status);
-      const paginatedData = filteredData.slice(
-        (currentPage - 1) * PAGINATION_PAGE_SIZE,
-        currentPage * PAGINATION_PAGE_SIZE
-      );
-      setFilteredData(paginatedData);
-      setTotalRecords(filteredData.length);
-    }
+    setCurrentPage(1);
+    const filteredData = data.filter((item) => item.status === status);
+    setTotalRecords(filteredData.length);
   };
   
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    if (selectedStatus === "") {
-      const paginatedData = data.slice(
-        (newPage - 1) * PAGINATION_PAGE_SIZE,
-        newPage * PAGINATION_PAGE_SIZE
-      );
-      setFilteredData(paginatedData);
-    } else {
-      const filteredData = data.filter((item) => item.status === selectedStatus);
-      const paginatedData = filteredData.slice(
-        (newPage - 1) * PAGINATION_PAGE_SIZE,
-        newPage * PAGINATION_PAGE_SIZE
-      );
-      setFilteredData(paginatedData);
-    }
   };
 
   if (loading) {
