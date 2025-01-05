@@ -5,6 +5,7 @@ import ItemRequestsTable from "@/components/tables/Table";
 import Pagination from "@/components/molecules/Pagination";
 import { RequestStatus } from "@/lib/types/request";
 import mockItemRequests from "@/app/api/mock/data";
+import { PAGINATION_PAGE_SIZE } from "@/lib/constants/config";
 
 type TableRow = {
   id: number;
@@ -23,7 +24,6 @@ export default function ItemRequestsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState<string>(""); // Default to "All"
 
@@ -62,7 +62,11 @@ export default function ItemRequestsPage() {
 
         setData(formattedData);
         setTotalRecords(formattedData.length);
-        setFilteredData(formattedData);
+        const paginatedData = formattedData.slice(
+          (currentPage - 1) * PAGINATION_PAGE_SIZE,
+          currentPage * PAGINATION_PAGE_SIZE
+        );
+        setFilteredData(paginatedData);
       } catch (error: any) {
         setError(error.message || "An unknown error occurred.");
       } finally {
@@ -110,9 +114,18 @@ export default function ItemRequestsPage() {
   const handleTabClick = (status: string) => {
     setSelectedStatus(status);
     if (status === "") {
-      setFilteredData(data);
+      const paginatedData = data.slice(
+        (currentPage - 1) * PAGINATION_PAGE_SIZE,
+        currentPage * PAGINATION_PAGE_SIZE
+      );
+      setFilteredData(paginatedData);
     } else {
-      setFilteredData(data.filter((item) => item.status === status));
+      const filteredData = data.filter((item) => item.status === status);
+      const paginatedData = filteredData.slice(
+        (currentPage - 1) * PAGINATION_PAGE_SIZE,
+        currentPage * PAGINATION_PAGE_SIZE
+      );
+      setFilteredData(paginatedData);
     }
   };
 
@@ -125,8 +138,8 @@ export default function ItemRequestsPage() {
       <h1 className="text-2xl font-bold mb-4">Item Requests</h1>
       {error && <div className="text-red-500">{error}</div>}
 
-      {/* Status Tabs */}
-      <div className="mb-4 flex gap-4">
+            {/* Status Tabs */}
+            <div className="mb-4 flex gap-4">
         <button
           className={`px-4 py-2 rounded-lg text-sm ${
             selectedStatus === ""
@@ -159,7 +172,7 @@ export default function ItemRequestsPage() {
       <div className="mt-4">
         <Pagination
           pageNumber={currentPage}
-          pageSize={pageSize}
+          pageSize={PAGINATION_PAGE_SIZE}
           totalRecords={totalRecords}
           onPageChange={handlePageChange}
         />
