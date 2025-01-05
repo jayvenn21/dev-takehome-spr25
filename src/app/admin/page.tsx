@@ -32,16 +32,6 @@ export default function ItemRequestsPage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/mock/request?page=${currentPage}`, {
-          method: "GET",
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: Failed to fetch requests`);
-        }
-
-        const result = await response.json();
-
         const statusMapping = {
           [RequestStatus.APPROVED]: "Approved",
           [RequestStatus.PENDING]: "Pending",
@@ -70,62 +60,52 @@ export default function ItemRequestsPage() {
     };
 
     fetchData();
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
-    if (selectedStatus === "") {
-      const paginatedData = data.slice(
-        (currentPage - 1) * PAGINATION_PAGE_SIZE,
-        currentPage * PAGINATION_PAGE_SIZE
-      );
-      setFilteredData(paginatedData);
-      setTotalRecords(data.length);
-    } else {
-      const filteredData = data.filter((item) => item.status === selectedStatus);
-      const paginatedData = filteredData.slice(
-        (currentPage - 1) * PAGINATION_PAGE_SIZE,
-        currentPage * PAGINATION_PAGE_SIZE
-      );
-      setFilteredData(paginatedData);
-      setTotalRecords(filteredData.length);
+    let filteredResult = data;
+    if (selectedStatus !== "") {
+      filteredResult = data.filter((item) => item.status === selectedStatus);
     }
+    setTotalRecords(filteredResult.length);
+    const paginatedData = filteredResult.slice(
+      (currentPage - 1) * PAGINATION_PAGE_SIZE,
+      currentPage * PAGINATION_PAGE_SIZE
+    );
+    setFilteredData(paginatedData);
   }, [selectedStatus, data, currentPage]);
 
   const handleStatusChange = async (id: number, value: string) => {
-    const updatedData = [...data];
-    const index = updatedData.findIndex((item) => item.id === id);
-    if (index !== -1) {
-      updatedData[index].status = value;
-      setData(updatedData);
+    const updatedData = data.map(item => 
+      item.id === id ? { ...item, status: value } : item
+    );
+    setData(updatedData);
   
-      try {
-        const response = await fetch("/api/mock/request", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: id,
-            status: value.toLowerCase(),
-          }),
-        });
+    try {
+      const response = await fetch("/api/mock/request", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+          status: value.toLowerCase(),
+        }),
+      });
   
-        if (!response.ok) {
-          console.error("Failed to update status:", await response.text());
-          setError("Failed to change status.");
-        }
-      } catch (error) {
-        console.error("Error updating status:", error);
-        setError("Cannot change status.");
+      if (!response.ok) {
+        console.error("Failed to update status:", await response.text());
+        setError("Failed to change status.");
       }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      setError("Cannot change status.");
     }
   };
 
   const handleTabClick = (status: string) => {
     setSelectedStatus(status);
     setCurrentPage(1);
-    const filteredData = data.filter((item) => item.status === status);
-    setTotalRecords(filteredData.length);
   };
   
   const handlePageChange = (newPage: number) => {
@@ -141,8 +121,8 @@ export default function ItemRequestsPage() {
       <h1 className="text-2xl font-bold mb-4">Item Requests</h1>
       {error && <div className="text-red-500">{error}</div>}
 
-            {/* Status Tabs */}
-            <div className="mb-4 flex gap-4">
+      {/* Status Tabs */}
+      <div className="mb-4 flex gap-4">
         <button
           className={`px-4 py-2 rounded-lg text-sm ${
             selectedStatus === ""
