@@ -24,7 +24,6 @@ const statuses = [
   { label: "Completed", color: "blue" },
 ];
 
-
 export default function ItemRequestsPage() {
   const [data, setData] = useState<TableRow[]>([]);
   const [filteredData, setFilteredData] = useState<TableRow[]>([]);
@@ -32,7 +31,7 @@ export default function ItemRequestsPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [selectedStatus, setSelectedStatus] = useState<string>(""); // Default to "All"
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,8 +126,8 @@ export default function ItemRequestsPage() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Item Requests</h1>
-        <div className="flex items-center space-x-4">
-          <span className="text-gray-700">Mark as:</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-gray-700 whitespace-nowrap">Mark as:</span>
           <Dropdown
             options={statuses.map(status => status.label)}
             value=""
@@ -146,16 +145,35 @@ export default function ItemRequestsPage() {
       </div>
       
       {error && <div className="text-red-500">{error}</div>}
-
-      {/* Status Tabs */}
+  
       <div className="mb-4 flex gap-4">
-        {/* ... (previous status tabs code) */}
+        <button
+          className={`px-4 py-2 rounded-lg text-sm ${
+            selectedStatus === ""
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          } hover:bg-blue-400 hover:text-white`}
+          onClick={() => handleTabClick("")}
+        >
+          All
+        </button>
+        {statuses.map((status) => (
+          <button
+            key={status.label}
+            className={`px-4 py-2 rounded-lg text-sm ${
+              selectedStatus === status.label
+                ? `bg-${status.color}-500 text-white`
+                : `bg-gray-200 text-gray-700`
+            } hover:bg-${status.color}-400 hover:text-white`}
+            onClick={() => handleTabClick(status.label)}
+          >
+            {status.label}
+          </button>
+        ))}
       </div>
-
-      {/* Item Requests Table */}
+  
       <ItemRequestsTable data={filteredData} onStatusChange={handleStatusChange} />
-
-      {/* Pagination component */}
+  
       <div className="mt-4">
         <Pagination
           pageNumber={currentPage}
