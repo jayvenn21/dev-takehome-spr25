@@ -107,10 +107,6 @@ export default function ItemRequestsPage() {
     }
   };
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
   const handleTabClick = (status: string) => {
     setSelectedStatus(status);
     if (status === "") {
@@ -119,11 +115,31 @@ export default function ItemRequestsPage() {
         currentPage * PAGINATION_PAGE_SIZE
       );
       setFilteredData(paginatedData);
+      setTotalRecords(data.length);
     } else {
       const filteredData = data.filter((item) => item.status === status);
       const paginatedData = filteredData.slice(
         (currentPage - 1) * PAGINATION_PAGE_SIZE,
         currentPage * PAGINATION_PAGE_SIZE
+      );
+      setFilteredData(paginatedData);
+      setTotalRecords(filteredData.length);
+    }
+  };
+  
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    if (selectedStatus === "") {
+      const paginatedData = data.slice(
+        (newPage - 1) * PAGINATION_PAGE_SIZE,
+        newPage * PAGINATION_PAGE_SIZE
+      );
+      setFilteredData(paginatedData);
+    } else {
+      const filteredData = data.filter((item) => item.status === selectedStatus);
+      const paginatedData = filteredData.slice(
+        (newPage - 1) * PAGINATION_PAGE_SIZE,
+        newPage * PAGINATION_PAGE_SIZE
       );
       setFilteredData(paginatedData);
     }
