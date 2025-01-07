@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Dropdown from "@/components/atoms/Dropdown";
-import Checkbox from "@/components/atoms/Checkbox"; // Import the new Checkbox component
+import Checkbox from "@/components/atoms/Checkbox";
 
 type TableRow = {
   id: number;
