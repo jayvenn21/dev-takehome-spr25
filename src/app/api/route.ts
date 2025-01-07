@@ -1,8 +1,7 @@
 import { ResponseType } from "@/lib/types/apiResponse";
 import { Request } from "@/lib/models/request";
 import { ServerResponseBuilder } from "@/lib/builders/serverResponseBuilder";
-import { InputException, InvalidInputError, InvalidPaginationError } from "@/lib/errors/inputExceptions";
-import mongoose from "mongoose";
+import { InvalidInputError, InvalidPaginationError } from "@/lib/errors/inputExceptions";
 
 // Constants
 const PAGINATION_PAGE_SIZE = 6;

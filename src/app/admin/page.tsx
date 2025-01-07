@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// ^ disable rules because we are validating anys and data is hardcoded
+
 "use client";
 
 import React, { useEffect, useState } from "react";
