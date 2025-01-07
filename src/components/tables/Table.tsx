@@ -33,7 +33,6 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
         return "";
     }
   };
-  
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -49,6 +48,8 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
     );
   };
 
+  const isIndeterminate = selectedRows.length > 0 && selectedRows.length < data.length;
+
   return (
     <div className="overflow-x-auto border rounded-lg">
       <table className="table-auto w-full border-collapse border border-gray-200 text-left">
@@ -59,6 +60,10 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={selectedRows.length === data.length}
+                ref={(input) => {
+                  if (input) input.indeterminate = isIndeterminate;
+                }}
+                className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out hover:border-blue-400 focus:ring-blue-500"
               />
             </th>
             <th className="px-4 py-2 border border-gray-200">Name</th>
@@ -81,6 +86,7 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
                   type="checkbox"
                   checked={selectedRows.includes(row.id)}
                   onChange={() => handleSelectRow(row.id)}
+                  className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out hover:border-blue-400 focus:ring-blue-500"
                 />
               </td>
               <td className="px-4 py-2 border border-gray-200">{row.name}</td>
