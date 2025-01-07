@@ -7,6 +7,9 @@ import { RequestStatus } from "@/lib/types/request";
 import mockItemRequests from "@/app/api/mock/data";
 import { PAGINATION_PAGE_SIZE } from "@/lib/constants/config";
 import Dropdown from "@/components/atoms/Dropdown";
+import Link from "next/link"; // Import Link for navigation
+import Button from "@/components/atoms/Button"; // Import Button component
+import { APP_PATHS } from "@/lib/constants/paths"; // Import your app paths
 
 type TableRow = {
   id: number;
@@ -55,7 +58,6 @@ export default function ItemRequestsPage() {
           [RequestStatus.COMPLETED]: "Completed",
         };
 
-        // Use the defined MockItemRequest type
         const formattedData = mockItemRequests.map((item: MockItemRequest): TableRow => ({
           id: item.id,
           name: item.requestorName,
@@ -146,6 +148,7 @@ export default function ItemRequestsPage() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Item Requests</h1>
+
         <div className="flex items-center space-x-2">
           <span className="text-gray-700 whitespace-nowrap">Mark As</span>
           <div className="relative inline-block text-left w-32">
@@ -207,6 +210,13 @@ export default function ItemRequestsPage() {
         data={filteredData} 
         onStatusChange={handleStatusChange} 
       />
+
+      {/* Centered Back Button */}
+      <div className="flex justify-center mt-4">
+        <Link href={APP_PATHS.HOME}>
+          <Button variant="inverted">Back to Home</Button>
+        </Link>
+      </div>
 
       {/* Pagination */}
       <div className="mt-4 flex justify-end">
