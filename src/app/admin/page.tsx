@@ -7,9 +7,9 @@ import { RequestStatus } from "@/lib/types/request";
 import mockItemRequests from "@/app/api/mock/data";
 import { PAGINATION_PAGE_SIZE } from "@/lib/constants/config";
 import Dropdown from "@/components/atoms/Dropdown";
-import Link from "next/link"; // Import Link for navigation
-import Button from "@/components/atoms/Button"; // Import Button component
-import { APP_PATHS } from "@/lib/constants/paths"; // Import your app paths
+import Link from "next/link";
+import Button from "@/components/atoms/Button";
+import { APP_PATHS } from "@/lib/constants/paths";
 
 type TableRow = {
   id: number;
