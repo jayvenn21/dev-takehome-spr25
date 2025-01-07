@@ -20,8 +20,8 @@ type TableRow = {
 const statuses = [
   { label: "Pending", color: "blue" },
   { label: "Approved", color: "blue" },
-  { label: "Rejected", color: "blue" },
   { label: "Completed", color: "blue" },
+  { label: "Rejected", color: "blue" },
 ];
 
 export default function ItemRequestsPage() {
@@ -133,7 +133,7 @@ export default function ItemRequestsPage() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Item Requests</h1>
         <div className="flex items-center space-x-2">
-          <span className="text-gray-700 whitespace-nowrap">Mark as:</span>
+          <span className="text-gray-700 whitespace-nowrap">Mark As</span>
           <div className="relative inline-block text-left w-32">
             <Dropdown
               options={statuses.map(status => status.label)}
@@ -143,12 +143,18 @@ export default function ItemRequestsPage() {
             />
           </div>
           <button
-            className="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
+            className="bg-white hover:bg-white text-black p-2 rounded border border-black"
             onClick={() => console.log("Delete selected items")}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="white">
+            <path 
+              fillRule="evenodd" 
+              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" 
+              clipRule="evenodd"
+              stroke="gray"
+              strokeWidth="1"
+            />
+          </svg>
           </button>
         </div>
       </div>
@@ -184,7 +190,7 @@ export default function ItemRequestsPage() {
   
       <ItemRequestsTable data={filteredData} onStatusChange={handleStatusChange} />
   
-      <div className="mt-4">
+      <div className="mt-4 flex justify-end">
         <Pagination
           pageNumber={currentPage}
           pageSize={PAGINATION_PAGE_SIZE}
