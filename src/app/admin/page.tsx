@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import ItemRequestsTable from "@/components/tables/Table";
 import Pagination from "@/components/molecules/Pagination";
 import { RequestStatus } from "@/lib/types/request";
-import mockItemRequests from "@/app/api/mock/data"; // Ensure this file exports correctly typed data
+import mockItemRequests from "@/app/api/mock/data";
 import { PAGINATION_PAGE_SIZE } from "@/lib/constants/config";
 import Dropdown from "@/components/atoms/Dropdown";
 
@@ -17,13 +17,12 @@ type TableRow = {
   status: string;
 };
 
-// Define the structure of a mock item request
 interface MockItemRequest {
   id: number;
   requestorName: string;
   itemRequested: string;
   requestCreatedDate: string | Date;
-  lastEditedDate?: string | Date | null; // Allow null for lastEditedDate
+  lastEditedDate?: string | Date | null;
   status: RequestStatus;
 }
 

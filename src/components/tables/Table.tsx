@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Dropdown from "@/components/atoms/Dropdown";
+import Checkbox from "@/components/atoms/Checkbox"; // Import the new Checkbox component
 
 type TableRow = {
   id: number;
@@ -56,14 +57,10 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
         <thead>
           <tr className="bg-gray-100 text-gray-700">
             <th className="px-4 py-2 border border-gray-200">
-              <input
-                type="checkbox"
+              <Checkbox
                 onChange={handleSelectAll}
                 checked={selectedRows.length === data.length}
-                ref={(input) => {
-                  if (input) input.indeterminate = isIndeterminate;
-                }}
-                className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out hover:border-blue-400 focus:ring-blue-500"
+                indeterminate={isIndeterminate}
               />
             </th>
             <th className="px-4 py-2 border border-gray-200">Name</th>
@@ -82,11 +79,10 @@ export default function ItemRequestsTable({ data, onStatusChange }: TableProps) 
               } text-gray-800`}
             >
               <td className="px-4 py-2 border border-gray-200">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={selectedRows.includes(row.id)}
                   onChange={() => handleSelectRow(row.id)}
-                  className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out hover:border-blue-400 focus:ring-blue-500"
+                  hoverColor={row.status === 'Pending' ? 'orange' : row.status === 'Approved' ? 'yellow' : row.status === 'Completed' ? 'green' : 'red'}
                 />
               </td>
               <td className="px-4 py-2 border border-gray-200">{row.name}</td>
