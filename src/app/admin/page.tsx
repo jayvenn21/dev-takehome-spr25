@@ -20,6 +20,8 @@ type TableRow = {
   status: string;
 };
 
+// created this interface to fix eslint bug
+
 interface MockItemRequest {
   id: number;
   requestorName: string;

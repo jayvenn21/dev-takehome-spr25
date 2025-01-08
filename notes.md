@@ -4,15 +4,15 @@
 
 - [X] Read the README [please please please]
 - [X] Something cool!
-- [ ] Back-end
-  - [ ] Minimum Requirements
-    - [ ] Setup MongoDB database
-    - [ ] Setup item requests collection
-    - [ ] `PUT /api/request`
-    - [ ] `GET /api/request?page=_`
-  - [ ] Main Requirements
-    - [ ] `GET /api/request?status=pending`
-    - [ ] `PATCH /api/request`
+- [X] Back-end
+  - [X] Minimum Requirements
+    - [X] Setup MongoDB database
+    - [X] Setup item requests collection
+    - [X] `PUT /api/request`
+    - [X] `GET /api/request?page=_`
+  - [X] Main Requirements
+    - [X] `GET /api/request?status=pending`
+    - [X] `PATCH /api/request`
   - [ ] Above and Beyond
     - [ ] Batch edits
     - [ ] Batch deletes
@@ -32,3 +32,12 @@
 # Notes
 
 <!-- Notes go here -->
+
+
+for the input data, make sure to include double quotes for the attribute names. for example,
+for the PUT request, it should be 
+{
+    "requestorName": "Jane Doe",
+    "itemRequested": "Flashlights"
+}
+and the input type would be JSON.
